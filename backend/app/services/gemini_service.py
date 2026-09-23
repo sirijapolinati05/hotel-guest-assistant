@@ -215,13 +215,13 @@ def process_chat(message: str, conversation: list[ChatMessage], availability_con
             if "401" in error_str or "403" in error_str or "api key" in error_str:
                 return {
                     "intent": "faq",
-                    "reply": f"I'm having trouble accessing the AI assistant right now.{availability_suggestion}"
+                    "reply": f"I'm having trouble accessing the AI assistant right now due to authentication issues.{availability_suggestion}"
                 }
                 
             if "429" in error_str or "quota" in error_str or "resource exhausted" in error_str:
                 return {
                     "intent": "faq",
-                    "reply": f"I'm having trouble accessing the AI assistant right now.{availability_suggestion}"
+                    "reply": f"The AI assistant is receiving too many requests right now. Please wait a few moments and try again.{availability_suggestion}"
                 }
 
             if ("503" in error_str or "unavailable" in error_str) and attempt < max_retries - 1:
