@@ -1,14 +1,55 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState('home');
+
+  useEffect(() => {
+    const sections = ['home', 'rooms', 'amenities', 'dining', 'gallery'];
+    
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        // When a section comes into view, set it as the active tab
+        if (entry.isIntersecting) {
+          setActiveTab(entry.target.id);
+        }
+      });
+    }, {
+      // Trigger when the section crosses the middle of the screen
+      rootMargin: '-50% 0px -50% 0px' 
+    });
+
+    // Setup observers
+    sections.forEach((section) => {
+      const element = document.getElementById(section);
+      if (element) {
+        observer.observe(element);
+      }
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
+  const getDesktopTabClass = (tabId: string) => {
+    return `text-sm uppercase tracking-widest transition-colors ${
+      activeTab === tabId ? 'text-gold-500 font-bold' : 'hover:text-gold-500'
+    }`;
+  };
+
+  const getMobileTabClass = (tabId: string) => {
+    return `block px-3 py-2 text-base font-medium uppercase tracking-wide ${
+      activeTab === tabId ? 'bg-beige-50 text-gold-500' : 'text-charcoal-900 hover:bg-beige-50 hover:text-gold-500'
+    }`;
+  };
 
   return (
     <nav className="fixed w-full z-50 transition-all duration-300 bg-white/95 backdrop-blur-sm shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
           {/* Logo */}
-          <div className="flex-shrink-0 flex items-center cursor-pointer">
+          <div className="flex-shrink-0 flex items-center cursor-pointer" onClick={() => {
+            document.getElementById('home')?.scrollIntoView({ behavior: 'smooth' });
+          }}>
             <h1 className="font-serif text-2xl font-semibold tracking-wider uppercase text-charcoal-900">
               Simplotel <span className="text-gold-500">Grand</span>
             </h1>
@@ -16,13 +57,11 @@ export default function Navbar() {
 
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center space-x-8">
-            <a href="#home" className="text-sm uppercase tracking-widest hover:text-gold-500 transition-colors">Home</a>
-            <a href="#rooms" className="text-sm uppercase tracking-widest hover:text-gold-500 transition-colors">Rooms & Suites</a>
-            <a href="#amenities" className="text-sm uppercase tracking-widest hover:text-gold-500 transition-colors">Amenities</a>
-            <a href="#dining" className="text-sm uppercase tracking-widest hover:text-gold-500 transition-colors">Dining</a>
-            <a href="#gallery" className="text-sm uppercase tracking-widest hover:text-gold-500 transition-colors">Gallery</a>
-            
-
+            <a href="#home" className={getDesktopTabClass('home')}>Home</a>
+            <a href="#rooms" className={getDesktopTabClass('rooms')}>Rooms & Suites</a>
+            <a href="#amenities" className={getDesktopTabClass('amenities')}>Amenities</a>
+            <a href="#dining" className={getDesktopTabClass('dining')}>Dining</a>
+            <a href="#gallery" className={getDesktopTabClass('gallery')}>Gallery</a>
           </div>
 
           {/* Mobile menu button */}
@@ -47,12 +86,11 @@ export default function Navbar() {
       {isMobileMenuOpen && (
         <div className="md:hidden bg-white border-t border-gray-100 absolute w-full">
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 shadow-lg">
-            <a href="#home" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-2 text-base font-medium text-charcoal-900 hover:bg-beige-50 hover:text-gold-500 uppercase tracking-wide">Home</a>
-            <a href="#rooms" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-2 text-base font-medium text-charcoal-900 hover:bg-beige-50 hover:text-gold-500 uppercase tracking-wide">Rooms & Suites</a>
-            <a href="#amenities" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-2 text-base font-medium text-charcoal-900 hover:bg-beige-50 hover:text-gold-500 uppercase tracking-wide">Amenities</a>
-            <a href="#dining" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-2 text-base font-medium text-charcoal-900 hover:bg-beige-50 hover:text-gold-500 uppercase tracking-wide">Dining</a>
-            <a href="#gallery" onClick={() => setIsMobileMenuOpen(false)} className="block px-3 py-2 text-base font-medium text-charcoal-900 hover:bg-beige-50 hover:text-gold-500 uppercase tracking-wide">Gallery</a>
-
+            <a href="#home" onClick={() => setIsMobileMenuOpen(false)} className={getMobileTabClass('home')}>Home</a>
+            <a href="#rooms" onClick={() => setIsMobileMenuOpen(false)} className={getMobileTabClass('rooms')}>Rooms & Suites</a>
+            <a href="#amenities" onClick={() => setIsMobileMenuOpen(false)} className={getMobileTabClass('amenities')}>Amenities</a>
+            <a href="#dining" onClick={() => setIsMobileMenuOpen(false)} className={getMobileTabClass('dining')}>Dining</a>
+            <a href="#gallery" onClick={() => setIsMobileMenuOpen(false)} className={getMobileTabClass('gallery')}>Gallery</a>
           </div>
         </div>
       )}
