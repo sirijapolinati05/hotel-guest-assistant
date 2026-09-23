@@ -223,7 +223,7 @@ def process_chat(message: str, conversation: list[ChatMessage], availability_con
                 continue
             return {
                 "intent": "faq",
-                "reply": "I'm sorry, the AI service is temporarily busy. Please try again in a moment."
+                "reply": f"I'm sorry, the AI service is temporarily busy. Please try again in a moment. [DEBUG: {str(e)}]"
             }
 
 
