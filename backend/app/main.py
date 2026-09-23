@@ -1,3 +1,12 @@
+import sys
+import os
+from pathlib import Path
+
+# Fix for Vercel: Add the backend directory to sys.path so absolute 'app' imports work
+backend_dir = Path(__file__).parent.parent
+if str(backend_dir) not in sys.path:
+    sys.path.insert(0, str(backend_dir))
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
