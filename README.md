@@ -8,21 +8,22 @@ Guests frequently ask the same questions (check-in times, amenities, policies) a
 ## Guest Journey
 1. The guest opens the assistant and is greeted.
 2. The guest can click on suggested FAQs or type a natural language question.
-3. If the question is about policies or amenities, the AI responds conversationally using its strict system prompt.
-4. If the guest asks for availability, the AI identifies the intent and prompts the UI to display a date selection form.
-5. Upon submitting dates and guest counts, the backend queries the database deterministically (without AI hallucination) and returns the available rooms.
+3. If the question is about policies, amenities, or dining (breakfast, lunch, dinner), the AI responds conversationally using its strict system prompt.
+4. If the guest asks for room availability, the AI detects the "availability" intent and begins a conversational flow.
+5. The AI automatically extracts dates, guest counts, and preferred times. If any required information is missing (like check-out date), the AI prompts the user conversationally.
+6. Once all information is gathered, the backend deterministically checks the database for available rooms and returns the results directly within the chat window.
 
 ## Architecture & Tech Stack
-- **Frontend**: React, TypeScript, Vite, Tailwind CSS (deployed to Vercel)
-- **Backend**: Python, FastAPI, Pydantic (deployed to Render)
+- **Frontend**: React, TypeScript, Vite, Tailwind CSS
+- **Backend**: Python, FastAPI, Pydantic
 - **Database**: Supabase PostgreSQL (Stores hotels, rooms, policies, amenities, and room_inventory)
 - **AI**: Gemini API via `google-genai` SDK on the backend.
 
 ## AI Architecture & Hallucination Prevention
 The AI logic runs entirely on the backend to keep API keys secure. 
 To prevent hallucination:
-1. **Strict System Prompt**: The hotel's data (policies, amenities, rooms, pricing) is hardcoded into the System Prompt. The model is explicitly instructed to *never* invent facts or prices.
-2. **Deterministic Availability**: The LLM is *never* used to decide if a room is available. It is only used to classify intent. When the user asks for availability, the LLM outputs `{"intent": "availability_request"}`. The frontend then displays a deterministic form that queries the database directly.
+1. **Strict System Prompt**: The hotel's data (policies, amenities, dining times, rooms, pricing) is hardcoded into the System Prompt. The model is explicitly instructed to *never* invent facts, availability, or prices.
+2. **Deterministic Availability**: The LLM is *never* used to decide if a room is available. It is only used to extract dates and guest numbers from the conversation. When the user asks for availability, the LLM outputs `{"intent": "availability", "check_in": "...", "check_out": "...", ...}`. The backend then queries the database directly and injects the actual availability data into the chat response.
 
 ## API Examples
 
@@ -42,27 +43,30 @@ Response:
 }
 ```
 
-### Availability
-`POST /api/availability`
+### Availability Conversation
+`POST /api/chat`
 ```json
 {
-  "check_in": "2026-10-05",
-  "check_out": "2026-10-08",
-  "adults": 3
+  "message": "I need a room for 2 adults from Oct 5 to Oct 8",
+  "conversation": []
 }
 ```
 Response:
 ```json
-[
-  {
-    "id": "22222222-2222-2222-2222-222222222222",
-    "name": "Executive Room",
-    "price_per_night": 7000,
-    "beds": "King Bed + Sofa Bed",
-    "max_guests": 3,
-    "available_count": 2
-  }
-]
+{
+  "intent": "availability",
+  "reply": "Let me check that for you...",
+  "availability": [
+    {
+      "id": "22222222-2222-2222-2222-222222222222",
+      "name": "Executive Room",
+      "price_per_night": 7000,
+      "beds": "King Bed + Sofa Bed",
+      "max_guests": 3,
+      "available_count": 2
+    }
+  ]
+}
 ```
 
 ## Local Setup
