@@ -229,5 +229,5 @@ def process_chat(message: str, conversation: list[ChatMessage], availability_con
                 continue
             return {
                 "intent": "faq",
-                "reply": f"I'm sorry, the AI service is temporarily busy. Please try again in a moment. [DEBUG: {str(e)}]"
+                "reply": "I'm sorry, our AI concierge is experiencing unusually high traffic at the moment. Please try asking your question again in a minute."
             }
