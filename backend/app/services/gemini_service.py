@@ -30,6 +30,8 @@ POLICIES:
 - Pets: Pets are not allowed.
 - Smoking: Smoking is not permitted inside guest rooms.
 - Breakfast: Breakfast is served from 7:00 AM to 10:30 AM and is included with eligible bookings.
+- Lunch: Lunch is served from 12:30 PM to 3:00 PM at our signature restaurant.
+- Dinner: Dinner is served from 7:00 PM to 10:30 PM at our signature restaurant.
 
 AMENITIES:
 - Swimming Pool
@@ -206,16 +208,20 @@ def process_chat(message: str, conversation: list[ChatMessage], availability_con
             error_str = str(e).lower()
             logger.exception("Gemini API request failed")
             
+            msg_lower = message.lower()
+            is_availability = any(word in msg_lower for word in ["availability", "room", "book", "check in", "check-in", "check out", "check-out", "stay"])
+            availability_suggestion = " You can still use the hotel availability search." if is_availability else ""
+            
             if "401" in error_str or "403" in error_str or "api key" in error_str:
                 return {
                     "intent": "faq",
-                    "reply": "I'm having trouble accessing the AI assistant right now. You can still use the hotel availability search."
+                    "reply": f"I'm having trouble accessing the AI assistant right now.{availability_suggestion}"
                 }
                 
             if "429" in error_str or "quota" in error_str or "resource exhausted" in error_str:
                 return {
                     "intent": "faq",
-                    "reply": "I'm having trouble accessing the AI assistant right now. You can still use the hotel availability search."
+                    "reply": f"I'm having trouble accessing the AI assistant right now.{availability_suggestion}"
                 }
 
             if ("503" in error_str or "unavailable" in error_str) and attempt < max_retries - 1:
@@ -225,5 +231,3 @@ def process_chat(message: str, conversation: list[ChatMessage], availability_con
                 "intent": "faq",
                 "reply": f"I'm sorry, the AI service is temporarily busy. Please try again in a moment. [DEBUG: {str(e)}]"
             }
-
-

@@ -199,7 +199,9 @@ export default function AIAssistant() {
                       <button 
                         onClick={() => {
                           setIsOpen(false);
-                          document.getElementById('availability')?.scrollIntoView({ behavior: 'smooth' });
+                          setTimeout(() => {
+                            document.getElementById('availability')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                          }, 100);
                         }}
                         className="mt-2 w-full bg-[#8B5E34] hover:bg-[#704A29] text-white py-2 px-4 rounded-lg text-xs font-semibold uppercase tracking-wider transition-colors shadow-sm"
                       >

@@ -18,11 +18,25 @@ export default function Dining() {
                 Start your day right with our complimentary gourmet breakfast, included with all eligible bookings. We offer a wide selection of hot and cold options, fresh pastries, and premium coffee.
               </p>
               
-              <div className="flex items-center text-sm uppercase tracking-widest text-gold-500 font-semibold border-t border-white/10 pt-4">
-                <svg className="w-5 h-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                7:00 AM – 10:30 AM Daily
+              <div className="flex flex-col space-y-3 border-t border-white/10 pt-4">
+                <div className="flex items-center text-sm uppercase tracking-widest text-gold-500 font-semibold">
+                  <svg className="w-5 h-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  Breakfast: 7:00 AM – 10:30 AM
+                </div>
+                <div className="flex items-center text-sm uppercase tracking-widest text-gold-500 font-semibold">
+                  <svg className="w-5 h-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  Lunch: 12:30 PM – 3:00 PM
+                </div>
+                <div className="flex items-center text-sm uppercase tracking-widest text-gold-500 font-semibold">
+                  <svg className="w-5 h-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  Dinner: 7:00 PM – 10:30 PM
+                </div>
               </div>
             </div>
             
